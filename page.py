@@ -15,7 +15,7 @@ def confirm(cond):
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 class RedisPageHandler(BaseHTTPRequestHandler):
   def do_GET(self):
-    page = self.path.strip('/')
+    page = self.path.split('/')[-1]
     print('Serving %s' % page)
 
     try:
