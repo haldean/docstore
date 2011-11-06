@@ -1,23 +1,25 @@
+source utils.sh
+
 PAGE=$1
+
+if [ $# -eq 2 ]; then
+  upload $1 $2
+  exit
+fi
+
 CONTENTS=""
 if [ -z $PAGE ]; then
   echo "Must specify page name."
   exit
-elif [ `redis-cli --raw exists $PAGE` == "1" ]; then
+elif [ `remredis --raw exists $PAGE` == "1" ]; then
   echo "This page already exists. Loading it into your editor."
-  CONTENTS=`redis-cli get $PAGE`
+  CONTENTS=`remredis get $PAGE`
 fi
 
 TEMPFILE=`mktemp`
 echo $CONTENTS > $TEMPFILE
 $EDITOR $TEMPFILE
 
-REMOTE_TEMPFILE=`ssh haldean.org mktemp`
-scp $TEMPFILE haldean.org:$REMOTE_TEMPFILE
-
-ssh haldean.org <<EOF
-cat $REMOTE_TEMPFILE | redis-cli -x set $PAGE
-rm $REMOTE_TEMPFILE
-EOF
+upload $PAGE $TEMPFILE
 
 rm $TEMPFILE
