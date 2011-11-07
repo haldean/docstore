@@ -7,8 +7,6 @@ import sys
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
-MD_EXTRAS=['footnotes','toc','smarty-pants']
-
 class BadPage(Exception): pass
 def confirm(cond):
   if not cond:
@@ -33,7 +31,10 @@ class RedisPageHandler(BaseHTTPRequestHandler):
       with open('head.html', 'r') as head:
         self.wfile.write(head.read())
 
-      self.wfile.write(markdown2.markdown(contents, extras=MD_EXTRAS))
+      output = markdown2.markdown(
+          contents, extras=['footnotes','toc','smarty-pants'])
+      output = output.replace('toc-here', output.toc_html)
+      self.wfile.write(output)
 
       with open('tail.html', 'r') as tail:
         self.wfile.write(tail.read())
