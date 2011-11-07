@@ -1,4 +1,4 @@
-source utils.sh
+source ./utils.sh
 
 PAGE=$1
 
@@ -7,17 +7,15 @@ if [ $# -eq 2 ]; then
   exit
 fi
 
-CONTENTS=""
+TEMPFILE=`mktemp`
 if [ -z $PAGE ]; then
   echo "Must specify page name."
   exit
 elif [ `remredis --raw exists $PAGE` == "1" ]; then
   echo "This page already exists. Loading it into your editor."
-  CONTENTS=`remredis get $PAGE`
+  remredis --raw get $PAGE > $TEMPFILE
 fi
 
-TEMPFILE=`mktemp`
-echo $CONTENTS > $TEMPFILE
 $EDITOR $TEMPFILE
 
 upload $PAGE $TEMPFILE

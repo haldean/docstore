@@ -1,4 +1,4 @@
-source utils.sh
+source ./utils.sh
 
 PAGE=$1
 if [ -z $PAGE ]; then
