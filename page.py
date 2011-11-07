@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-import markdown
+import markdown2
 import re
 import redis
 import sys
@@ -31,7 +31,7 @@ class RedisPageHandler(BaseHTTPRequestHandler):
       with open('head.html', 'r') as head:
         self.wfile.write(head.read())
 
-      self.wfile.write(markdown.markdown(contents))
+      self.wfile.write(markdown2.markdown(contents))
 
       with open('tail.html', 'r') as tail:
         self.wfile.write(tail.read())
