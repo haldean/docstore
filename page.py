@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import jinja2
 import markdown2
 import re
 import redis
@@ -13,11 +14,26 @@ def confirm(cond):
     raise BadPage()
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
+jenv = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
+index_page = jenv.get_template('index.html')
+doc_page = jenv.get_template('content.html')
 class RedisPageHandler(BaseHTTPRequestHandler):
   def do_GET(self):
-    page = self.path.split('/')[-1]
-    print('Serving %s' % page)
+    if self.path == '/':
+      self.serve_homepage()
+    else:
+      self.serve_page(self.path.split('/')[-1])
 
+  def serve_homepage(self):
+    print "serve homepage"
+    self.send_response(200)
+    self.send_header('Content-type', 'text/html')
+    self.end_headers()
+    slugs = list(r.smembers('pages'))
+    slugs.sort()
+    self.wfile.write(index_page.render(slugs=slugs))
+
+  def serve_page(self, page):
     try:
       confirm(re.match('^[a-z]{1,30}$', page))
       contents = r.get(page)
@@ -28,16 +44,10 @@ class RedisPageHandler(BaseHTTPRequestHandler):
       self.send_header('Content-type', 'text/html')
       self.end_headers()
 
-      with open('head.html', 'r') as head:
-        self.wfile.write(head.read())
-
       output = markdown2.markdown(
           contents, extras=['footnotes','toc','smarty-pants'])
       output = output.replace('toc-here', output.toc_html)
-      self.wfile.write(output)
-
-      with open('tail.html', 'r') as tail:
-        self.wfile.write(tail.read())
+      self.wfile.write(doc_page.render(title=page, content=output))
 
     except BadPage:
       self.send_response(404)

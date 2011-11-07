@@ -19,5 +19,6 @@ fi
 $EDITOR $TEMPFILE
 
 upload $PAGE $TEMPFILE
+remredis sadd pages $PAGE
 
 rm $TEMPFILE
