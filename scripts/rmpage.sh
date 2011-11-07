@@ -1,4 +1,4 @@
-source ./utils.sh
+source $(dirname `pwd`/$0)/utils.sh
 
 PAGE=$1
 if [ -z $PAGE ]; then
@@ -15,6 +15,7 @@ read -p "About to delete $PAGE. Are you sure? [y/N] " -n 1
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   if [ `remredis del $PAGE` == "1" ]; then
+    remredis srem pages $PAGE
     remredis del $PAGE_views
     echo Success.
   else

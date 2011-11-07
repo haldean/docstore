@@ -1,3 +1,2 @@
-source ./utils.sh
-
+source $(dirname `pwd`/$0)/utils.sh
 remredis keys "\"*\""
