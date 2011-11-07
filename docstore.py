@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import BeautifulSoup
 import jinja2
 import markdown2
 import re
@@ -8,15 +9,38 @@ import sys
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
+port = 8000
+enable_toc = True
+ignore_h1_in_toc = True
+
 class BadPage(Exception): pass
 def confirm(cond):
   if not cond:
     raise BadPage()
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
+
 jenv = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
 index_page = jenv.get_template('index.html')
 doc_page = jenv.get_template('content.html')
+
+def gen_toc(html):
+  if ignore_h1_in_toc:
+    first_level = 2
+  else:
+    first_level = 1
+
+  soup = BeautifulSoup.BeautifulSoup(html)
+  headers = soup.findAll(re.compile('^h[%d-6]' % first_level))
+  output = []
+  for header in headers:
+    hid = header.get('id')
+    title = header.text
+    level = int(header.name[-1])
+    output.append('%s<a href="#%s">%s</a>' % (
+          (level - first_level) * 4 * '&nbsp;', hid, title))
+  return '<br/>\n'.join(output)
+
 class RedisPageHandler(BaseHTTPRequestHandler):
   def do_GET(self):
     if self.path == '/':
@@ -44,9 +68,9 @@ class RedisPageHandler(BaseHTTPRequestHandler):
       self.send_header('Content-type', 'text/html')
       self.end_headers()
 
-      output = markdown2.markdown(
-          contents, extras=['footnotes','toc','smarty-pants'])
-      output = output.replace('toc-here', output.toc_html)
+      output = markdown2.markdown(contents, extras=['footnotes','smarty-pants'])
+      if enable_toc:
+        output = output.replace('toc-here', gen_toc(output))
       self.wfile.write(doc_page.render(title=page, content=output))
 
     except BadPage:
@@ -57,7 +81,7 @@ class RedisPageHandler(BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
   try:
-    server = HTTPServer(('', 8000), RedisPageHandler)
+    server = HTTPServer(('', port), RedisPageHandler)
     server.serve_forever()
   except:
     server.socket.close()
