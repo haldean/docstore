@@ -1825,6 +1825,7 @@ class UnicodeWithAttrs(unicode):
         lines = []
         h_stack = [0]   # stack of header-level numbers
         for level, id, name in self._toc:
+            if level == 1: continue
             if level > h_stack[-1]:
                 lines.append("%s<ul id=\"toc\">" % indent())
                 h_stack.append(level)
