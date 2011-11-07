@@ -1,17 +1,18 @@
 #!/usr/bin/env python2
 
-import BeautifulSoup
+port = 8000
+enable_toc = True
+ignore_h1_in_toc = True
+
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import jinja2
 import markdown2
 import re
 import redis
 import sys
 
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-
-port = 8000
-enable_toc = True
-ignore_h1_in_toc = True
+if enable_toc:
+  import BeautifulSoup
 
 class BadPage(Exception): pass
 def confirm(cond):
@@ -71,6 +72,8 @@ class RedisPageHandler(BaseHTTPRequestHandler):
       output = markdown2.markdown(contents, extras=['footnotes','smarty-pants'])
       if enable_toc:
         output = output.replace('toc-here', gen_toc(output))
+      else:
+        output = output.replace('toc-here', '')
       self.wfile.write(doc_page.render(title=page, content=output))
 
     except BadPage:
