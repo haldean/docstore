@@ -1,0 +1,37 @@
+body {
+  font-family: 'Noticia Text';
+  font-size: 12pt;
+  margin: 10% 30%;
+  background: #002b36;
+  color: #93a1a1;
+}
+
+h1 {
+  color: #CB4B16;
+}
+
+h2 {
+  color: #b58900;
+}
+
+h3 {
+  color: #268bd2;
+}
+
+a {
+  color: #719e07;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #859900;
+}
+
+code, pre {
+  font-family: 'Droid Sans Mono';
+  font-size: 10pt;
+}
+
+pre {
+  font-size: 10pt;
+}
