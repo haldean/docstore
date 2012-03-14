@@ -5,11 +5,16 @@ $.domReady(function() {
   if (page[page.length - 1] == '/') page = page.substring(0, page.length - 1)
   if (!page) {
     window.location = homepage
+    return
   }
+
+  var url = 'text/' + page + '.md'
+
   document.title = page;
+  document.getElementById("viewsource").setAttribute("href", url)
 
   $.ajax({
-    url: 'text/' + page + '.md',
+    url: url,
     type:'html',
     success: function(resp) {
       if (!resp) {
