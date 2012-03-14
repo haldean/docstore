@@ -1,7 +1,7 @@
 body {
   font-family: 'Noticia Text';
-  font-size: 12pt;
-  margin: 10% 30%;
+  font-size: 11pt;
+  margin: 10% 25%;
   background: #002b36;
   color: #93a1a1;
 }
@@ -34,4 +34,17 @@ code, pre {
 
 pre {
   font-size: 10pt;
+}
+
+#bottom {
+  color: #004b56;
+}
+
+#bottom a {
+  color: #005b66;
+  text-decoration: underline;
+}
+
+#bottom a:hover {
+  color: #fff;
 }
