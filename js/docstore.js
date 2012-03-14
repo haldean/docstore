@@ -1,5 +1,6 @@
 $.domReady(function() {
-  var page = document.location.hash.substring(1)
+  var page = document.location.search.substring(1)
+  if (page[-1] = '/') page = page.substring(0, page.length - 1)
   if (!page) {
     window.location = 'http://haldean.org'
   }
@@ -10,7 +11,6 @@ $.domReady(function() {
     success: function(resp) {
       document.getElementById("content").innerHTML = markdown.toHTML(resp)
       $('pre').each(function(el, index) {
-        console.log(el)
         hljs.highlightBlock(el, '  ')
       })
     }})
