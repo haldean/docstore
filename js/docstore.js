@@ -9,11 +9,6 @@ $.domReady(function() {
   }
 
   var url = 'text/' + page + '.md'
-
-  document.title = page;
-  document.getElementById('viewsource').setAttribute('href', 
-    'https://raw.github.com/haldean/docstore/master/' + url)
-
   $.ajax({
     url: url,
     type:'html',
@@ -27,4 +22,15 @@ $.domReady(function() {
         hljs.highlightBlock(el, '  ')
       })
     }})
+
+  document.title = page;
+  document.getElementById('viewsource').setAttribute('href', 
+    'https://raw.github.com/haldean/docstore/master/' + url)
+  
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
 })
