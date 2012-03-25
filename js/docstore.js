@@ -11,7 +11,8 @@ $.domReady(function() {
   var url = 'text/' + page + '.md'
 
   document.title = page;
-  document.getElementById("viewsource").setAttribute("href", url)
+  document.getElementById('viewsource').setAttribute('href', 
+    'https://raw.github.com/haldean/docstore/master/' + url)
 
   $.ajax({
     url: url,
@@ -21,7 +22,7 @@ $.domReady(function() {
         window.location = homepage
       }
 
-      document.getElementById("content").innerHTML = markdown.toHTML(resp)
+      document.getElementById('content').innerHTML = markdown.toHTML(resp)
       $('pre').each(function(el, index) {
         hljs.highlightBlock(el, '  ')
       })
