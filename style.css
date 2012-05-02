@@ -1,5 +1,5 @@
 body {
-  font-family: 'Noticia Text';
+  font-family: "adobe-garamond-pro-1","adobe-garamond-pro-2";
   font-size: 11pt;
   margin: 10% 25%;
   background: #002b36;
@@ -28,7 +28,7 @@ a:hover {
 }
 
 code, pre {
-  font-family: 'Droid Sans Mono';
+  font-family: "anonymous-pro-1","anonymous-pro-2";
   font-size: 10pt;
 }
 
