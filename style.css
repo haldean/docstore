@@ -1,4 +1,7 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Shanti);
+
 body {
+  font-family: Shanti, sans-serif;
   font-size: 12pt;
   margin: 10% 25%;
   background: #002b36;
@@ -7,14 +10,17 @@ body {
 
 h1 {
   color: #CB4B16;
+  font-size: 20pt;
 }
 
 h2 {
   color: #b58900;
+  font-size: 18pt;
 }
 
 h3 {
   color: #268bd2;
+  font-size: 16pt;
 }
 
 a {
@@ -27,7 +33,8 @@ a:hover {
 }
 
 code, pre {
-  font-size: 10pt;
+  font-family: 'Droid Sans Mono', monospace;
+  font-size: 9pt;
 }
 
 #bottom {
