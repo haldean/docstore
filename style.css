@@ -1,11 +1,12 @@
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Shanti);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Shanti|Droid+Sans);
 
 body {
-  font-family: Shanti, sans-serif;
+  font-family: 'Droid Sans', sans-serif;
   font-size: 12pt;
   margin: 10% 25%;
-  background: #002b36;
-  color: #a0aaaa;
+  color: #113;
+  background: #F3F3dE;
+  line-height: 20pt;
 }
 
 h1 {

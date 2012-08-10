@@ -8,7 +8,7 @@ delete line. These are the only real movement commands I used in Emacs, and they
 work in almost anything. Even nano has most of these. The worst that would ever
 happen is I'd have to close some print dialogs.  
   
-Two years ago, a heavy bout of coding gave me some wicked wrists problems, and
+Two years ago, a heavy bout of coding gave me some wicked wrist problems, and
 an ergo expert recommended I switch to vim. It fixed my wrists, but now my hands
 are wrecked. My fingers have minds of their own. My muscles have learned a
 subset of vim that does not seem to be a subset of any vim plugin maintainer's
