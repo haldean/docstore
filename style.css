@@ -1,11 +1,12 @@
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Shanti|Droid+Sans);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+
 
 body {
-  font-family: 'Droid Sans', sans-serif;
-  font-size: 12pt;
+  font-family: 'Palatino Linotype', Palatino, serif;
+  font-size: 14pt;
   margin: 10% 25%;
-  color: #113;
-  background: #F3F3dE;
+  color: #332;
+  background: #FFF;
   line-height: 20pt;
 }
 
@@ -35,18 +36,21 @@ a:hover {
 
 code, pre {
   font-family: 'Droid Sans Mono', monospace;
-  font-size: 9pt;
+  font-size: 12pt;
+  background: #EED;
+  padding: 2px;
+  margin: -2px;
 }
 
 #bottom {
-  color: #004b56;
+  color: #AA8;
 }
 
 #bottom a {
-  color: #005b66;
+  color: #AA8;
   text-decoration: underline;
 }
 
 #bottom a:hover {
-  color: #fff;
+  color: #886;
 }
