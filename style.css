@@ -1,8 +1,8 @@
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Source+Sans+Pro);
 
 
 body {
-  font-family: 'Palatino Linotype', Palatino, serif;
+  font-family: 'Source Sans Pro', serif;
   font-size: 14pt;
   margin: 10% 25%;
   color: #332;
@@ -11,17 +11,14 @@ body {
 }
 
 h1 {
-  color: #CB4B16;
   font-size: 20pt;
 }
 
 h2 {
-  color: #b58900;
   font-size: 18pt;
 }
 
 h3 {
-  color: #268bd2;
   font-size: 16pt;
 }
 
@@ -46,6 +43,7 @@ code, pre {
   color: #AA8;
 }
 
+/*
 #bottom a {
   color: #AA8;
   text-decoration: underline;
@@ -54,3 +52,4 @@ code, pre {
 #bottom a:hover {
   color: #886;
 }
+*/
