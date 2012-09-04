@@ -292,8 +292,7 @@ Markdown.dialects.Gruber = {
 
       if ( !m ) return undefined;
 
-      var header = [ "header", { level: m[ 1 ].length } ];
-      Array.prototype.push.apply(header, this.processInline(m[ 2 ]));
+      var header = [ "header", { level: m[ 1 ].length } ].concat(this.processBlock( m[ 2 ], [] ).shift().slice(1));
 
       if ( m[0].length < block.length )
         next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
@@ -307,7 +306,7 @@ Markdown.dialects.Gruber = {
       if ( !m ) return undefined;
 
       var level = ( m[ 2 ] === "=" ) ? 1 : 2;
-      var header = [ "header", { level : level }, m[ 1 ] ];
+      var header = [ "header", { level : level } ].concat(this.processBlock( m[ 1 ], [] ).shift().slice(1));
 
       if ( m[0].length < block.length )
         next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
@@ -721,7 +720,22 @@ Markdown.dialects.Gruber = {
 
     para: function para( block, next ) {
       // everything's a para!
-      return [ ["para"].concat( this.processInline( block ) ) ];
+
+      // For any markup that is not covered by Markdown’s syntax, you simply use HTML itself.
+      // There’s no need to preface it or delimit it to indicate that you’re switching from Markdown to HTML; you just use the tags.
+      // The only restrictions are that block-level HTML elements — e.g. <div>, <table>, <pre>, <p>, etc. — must be separated from
+      // surrounding content by blank lines, and the start and end tags of the block should not be indented with tabs or spaces.
+      // Markdown is smart enough not to add extra (unwanted) <p> tags around HTML block-level tags.
+      if (block[0] == "<" && block[block.length-1] == ">") {
+          var blockStr = block.valueOf();
+          // Span-level HTML tags — e.g. <span>, <cite>, or <del> — can be used anywhere in a Markdown paragraph, list item, or header. 
+          if (/^<(span|cite|del)[\s>]/.test(blockStr)) {
+              return [ ["para"].concat( this.processInline( block ) ) ];
+          }
+          return [ ["html"].concat( blockStr ) ];
+      } else {
+          return [ ["para"].concat( this.processInline( block ) ) ];
+      }
     }
   }
 }
@@ -797,7 +811,7 @@ Markdown.dialects.Gruber.inline = {
 
         m[2] == this.dialect.inline.__call__.call( this, m[2], /\\/ )[0];
 
-        var attrs = { alt: m[1], href: m[2] || "" };
+        var attrs = { alt: m[1], src: m[2] || "" };
         if ( m[4] !== undefined)
           attrs.title = m[4];
 
@@ -818,9 +832,9 @@ Markdown.dialects.Gruber.inline = {
     },
 
     "[": function link( text ) {
-      // [link text](/path/to/img.jpg "Optional title")
+      // [link text](/path/or/url "Optional title")
       //      1          2            3       4         <--- captures
-      var m = text.match( /^\[([\s\S]*?)\][ \t]*\([ \t]*(\S+)(?:[ \t]+(["'])(.*?)\3)?[ \t]*\)/ );
+      var m = text.match( /^\[([\s\S]*?)\][ \t]*\([ \t]*(\S+?)(?:[ \t]+(["'])(.*?)\3)?[ \t]*\)/ );
 
       if ( m ) {
         if ( m[2] && m[2][0] == '<' && m[2][m[2].length-1] == '>' )
@@ -833,9 +847,7 @@ Markdown.dialects.Gruber.inline = {
         if ( m[4] !== undefined)
           attrs.title = m[4];
 
-        var link = [ "link", attrs ];
-        Array.prototype.push.apply( link, this.processInline( m[1] ) );
-        return [ m[0].length, link ];
+        return [ m[0].length, [ "link", attrs, m[1] ] ];
       }
 
       // [Alt text][id]
@@ -847,16 +859,19 @@ Markdown.dialects.Gruber.inline = {
         // [id] case, text == id
         if ( m[2] === undefined || m[2] === "" ) m[2] = m[1];
 
-        attrs = { ref: m[ 2 ].toLowerCase(),  original: m[ 0 ] };
-        link = [ "link_ref", attrs ];
-        Array.prototype.push.apply( link, this.processInline( m[1] ) );
-
         // We can't check if the reference is known here as it likely wont be
         // found till after. Check it in md tree->hmtl tree conversion.
         // Store the original so that conversion can revert if the ref isn't found.
         return [
           m[ 0 ].length,
-          link
+          [
+            "link_ref",
+            {
+              ref: m[ 2 ].toLowerCase(),
+              original: m[ 0 ]
+            },
+            m[ 1 ]
+          ]
         ];
       }
 
@@ -1015,7 +1030,7 @@ Markdown.dialects.Maruku = Markdown.subclassDialect( Markdown.dialects.Gruber );
 
 Markdown.dialects.Maruku.block.document_meta = function document_meta( block, next ) {
   // we're only interested in the first block
-  if ( block.lineNumber > 1 ) return undefined;
+  if ( typeof block.lineNumber === "undefined" || block.lineNumber > 1 ) return undefined;
 
   // document_meta blocks consist of one or more lines of `Key: Value\n`
   if ( ! block.match( /^(?:\w+:.*\n)*\w+:.*$/ ) ) return undefined;
@@ -1165,7 +1180,7 @@ Markdown.dialects.Maruku.inline[ "{:" ] = function inline_meta( text, matches, o
 Markdown.buildBlockOrder ( Markdown.dialects.Maruku.block );
 Markdown.buildInlinePatterns( Markdown.dialects.Maruku.inline );
 
-var isArray = expose.isArray = function(obj) {
+var isArray = exports.isArray = function(obj) {
     return (obj instanceof Array || typeof obj === "array" || Array.isArray(obj));
 }
 
@@ -1198,8 +1213,8 @@ function process_meta_hash( meta_string ) {
       }
     }
     // attribute: foo=bar
-    else if ( /\=/.test( meta[ i ] ) ) {
-      var s = meta[ i ].split( /\=/ );
+    else if ( /=/.test( meta[ i ] ) ) {
+      var s = meta[ i ].split( /=/ );
       attr[ s[ 0 ] ] = s[ 1 ];
     }
   }
@@ -1298,6 +1313,11 @@ function render_tree( jsonml ) {
       attributes = {},
       content = [];
 
+  // render block as-is
+  if (tag === false) {
+      return jsonml.join( "" );
+  }
+
   if ( jsonml.length && typeof jsonml[ 0 ] === "object" && !( jsonml[ 0 ] instanceof Array ) ) {
     attributes = jsonml.shift();
   }
@@ -1358,6 +1378,10 @@ function convert_tree_to_html( tree, references, options ) {
     case "para":
       jsonml[ 0 ] = "p";
       break;
+    case "html":
+      // handle block as-is
+      jsonml[ 0 ] = false;
+      break;
     case "markdown":
       jsonml[ 0 ] = "html";
       if ( attrs ) delete attrs.references;
@@ -1373,12 +1397,10 @@ function convert_tree_to_html( tree, references, options ) {
       jsonml[ 0 ] = "code";
       break;
     case "img":
-      jsonml[ 1 ].src = jsonml[ 1 ].href;
-      delete jsonml[ 1 ].href;
       break;
     case "linebreak":
       jsonml[0] = "br";
-    break;
+      break;
     case "link":
       jsonml[ 0 ] = "a";
       break;
