@@ -1,55 +1,68 @@
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Source+Sans+Pro);
-
-
 body {
-  font-family: 'Source Sans Pro', serif;
-  font-size: 14pt;
-  margin: 10% 25%;
-  color: #332;
+  color: #000;
   background: #FFF;
-  line-height: 20pt;
+
+  width: 33em;
+  margin: 6em auto;
+
+  font-family: sans-serif;
+  font-size: 14pt;
+  line-height: 1.5;
 }
 
-h1 {
-  font-size: 20pt;
+h1 { font-size:2.25em;  /* 16x2.25=36 */ }
+h2 { font-size:1.5em;   /* 16x1.5=24 */ }
+h3 { font-size:1.125em; /* 16x1.125=18 */ }
+h4 { font-size:0.875em; /* 16x0.875=14 */ }
+
+p {
+  margin-bottom: 0;
+  text-align: justify;
+  hyphenate: auto;
+  hyphenate-before:2;
+  hyphenate-after:3;
 }
 
-h2 {
-  font-size: 18pt;
+/* all paragraphs that are proceeded by another paragraph */
+p + p {
+  margin-top: 0;
+  text-indent: 1em;
+}
+
+img {
+  width: 100%;
+}
+
+figcaption {
+  text-align: center;
+  font-size: 0.875em;
+  font-style: italic;
+}
+
+figure {
+  margin: 2em;
 }
 
 h3 {
-  font-size: 16pt;
+  margin-top: 5em;
+}
+
+pre {
+  background: #EEE;
+  padding: .5em;
+  margin: 1em 2em;
+}
+
+code {
+  background: #EEE;
+  padding: .25em;
 }
 
 a {
-  color: #719e07;
+  color: #268bd2;
   text-decoration: none;
 }
 
 a:hover {
-  color: #859900;
+  color: #1a6192;
 }
-
-code, pre {
-  font-family: 'Droid Sans Mono', monospace;
-  font-size: 12pt;
-  background: #FDF6E3;
-  padding: 2px;
-  margin: -2px;
-}
-
-#bottom {
-  color: #AA8;
-}
-
-/*
-#bottom a {
-  color: #AA8;
-  text-decoration: underline;
-}
-
-#bottom a:hover {
-  color: #886;
-}
-*/
