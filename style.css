@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Merriweather:300,400);
+
 body {
   color: #000;
   background: #FFF;
@@ -5,9 +7,9 @@ body {
   width: 33em;
   margin: 6em auto;
 
-  font-family: sans-serif;
-  font-size: 14pt;
-  line-height: 1.5;
+  font-family: Merriweather, serif;
+  font-size: 12pt;
+  line-height: 1.7;
 }
 
 h1 { font-size:2.25em;  /* 16x2.25=36 */ }
@@ -65,4 +67,10 @@ a {
 
 a:hover {
   color: #1a6192;
+}
+
+#bottom {
+  margin-top: 2em;
+  font-size: 0.7em;
+  text-align: center;
 }
